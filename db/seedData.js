@@ -7,7 +7,7 @@ async function dropTables() {
   // drop all tables, in the correct order
 
   await client.query(`
-  DROP TABLE IF EXISTS users, activities, routines, routineActivities;
+  DROP TABLE IF EXISTS users, activities, routines, routine_activities;
   `)}
 
 
