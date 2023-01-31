@@ -1,5 +1,6 @@
 # fitnesstrackr
 
+check for kade
 First change!
 # This was changed from luke-branch
 
