@@ -2,7 +2,25 @@ const client = require('./client');
 
 // database functions
 async function createActivity({ name, description }) {
+  console.log("Creating activity...");
   // return the new activity
+  try {
+    const {rows: [activity] } = await client.query(`
+      INSERT INTO activities (name, description)
+      values ($1, $2)
+      returning *;
+    `, [name, description]);
+
+    console.log(activity);
+    console.log("Activity created");
+
+    return activity;
+
+  } catch (error) {
+    console.error("Cannot create user");
+    throw error;
+  }
+  
 }
 
 async function getAllActivities() {
