@@ -13,7 +13,8 @@ async function createUser({ username, password }) {
       returning *;
     `, [username, password]);
 
-    // 
+    // ON CONFLICT (username) DO NOTHING
+    // this is optional maybe
 
     console.log(user);
     console.log("User created");
