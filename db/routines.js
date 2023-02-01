@@ -49,21 +49,21 @@ async function getRoutinesWithoutActivities() {
 
 async function getAllRoutines() {
   // select and return an array of all routines, include their activities
-  // console.log("Getting all routines...")
+  console.log("Getting all routines...")
 
   try {
-    const { rows: [routine]} = await client.query(`
+    const {rows} = await client.query(`
       SELECT * FROM routines;
     `)
 
 
-    console.log(routine);
-    // console.log("Getting all routines...")
-    return routine;
+    console.log(rows);
+    console.log("All routines gotten!")
+    return rows;
 
   } catch (error) {
     console.log(error);
-    console.error("Cannot select routines.");
+    console.error("Sorry, cannot get routines.");
     throw error;
   }
 }
