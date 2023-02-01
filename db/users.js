@@ -10,9 +10,10 @@ async function createUser({ username, password }) {
     const {rows: [user] } = await client.query(`
       INSERT INTO users (username, password)
       values ($1, $2)
-      on conflict (username) do nothing
       returning *;
     `, [username, password]);
+
+    // 
 
     console.log(user);
     console.log("User created");

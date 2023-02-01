@@ -46,10 +46,12 @@ try{
   );
 
   CREATE TABLE routine_activities (
-    "routineId" INTEGER UNIQUE REFERENCES routines (id),
-    "activityId" INTEGER UNIQUE REFERENCES activities (id),
-    duration INTEGER,	
-    count	INTEGER
+    id SERIAL PRIMARY KEY,
+    "routineId" INTEGER REFERENCES routines(id),
+    "activityId" INTEGER REFERENCES activities(id),
+    duration INTEGER,
+    count INTEGER,
+    UNIQUE ("routineId", "activityId")
   );
   `)
 

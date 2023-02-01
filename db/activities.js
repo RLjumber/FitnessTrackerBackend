@@ -4,6 +4,7 @@ const client = require('./client');
 async function createActivity({ name, description }) {
   console.log("Creating activity...");
   // return the new activity
+  
   try {
     const {rows: [activity] } = await client.query(`
       INSERT INTO activities (name, description)
