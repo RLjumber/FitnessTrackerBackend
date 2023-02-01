@@ -26,6 +26,23 @@ async function createActivity({ name, description }) {
 
 async function getAllActivities() {
   // select and return an array of all activities
+  console.log("Getting all activities...")
+
+  try {
+
+    const {rows} = await client.query(`
+      SELECT * FROM activities;
+    `);
+
+    console.log("Activities got!")
+    console.log(rows)
+    return rows;
+
+  } catch (error) {
+    console.error("Cannot get  all activities.");
+    throw error;
+  }
+
 }
 
 async function getActivityById(id) {}
