@@ -16,7 +16,7 @@ const { createFakeActivity } = require("../helpers");
 
 describe("DB Activities", () => {
   describe("createActivity({ name, description })", () => {
-    xit("Creates and returns the new activity", async () => {
+    it("Creates and returns the new activity", async () => {
       const activityToCreate = {
         name: "Marathon",
         description: "Run all the miles",
