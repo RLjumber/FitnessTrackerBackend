@@ -35,7 +35,7 @@ async function getAllActivities() {
     `);
 
     console.log("Activities got!")
-    // console.log(rows)
+    console.log(rows)
     return rows;
 
   } catch (error) {

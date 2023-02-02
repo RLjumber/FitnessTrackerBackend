@@ -26,9 +26,47 @@ async function createRoutine({ creatorId, isPublic, name, goal }) {
 
 async function getRoutineById(id) {}
 
-async function getRoutinesWithoutActivities() {}
+async function getRoutinesWithoutActivities() {
+  //  select and return an array of all routines
+  // console.log("Selecting all routines without activities")
 
-async function getAllRoutines() {}
+  try {
+    const { rows: [routinesWithoutActivities]} = await client.query(`
+      SELECT * FROM routines;
+    `)
+
+    // console.log("Routines without activities: ", routinesWithoutActivities)
+    return routinesWithoutActivities;
+
+  } catch (error) {
+    console.log(error);
+    console.error("Cannot select routines.");
+    throw error;
+  }
+
+};
+
+
+async function getAllRoutines() {
+  // select and return an array of all routines, include their activities
+  // console.log("Getting all routines...")
+
+  try {
+    const { rows: [routine]} = await client.query(`
+      SELECT * FROM routines;
+    `)
+
+
+    console.log(routine);
+    // console.log("Getting all routines...")
+    return routine;
+
+  } catch (error) {
+    console.log(error);
+    console.error("Cannot select routines.");
+    throw error;
+  }
+}
 
 async function getAllPublicRoutines() {}
 
