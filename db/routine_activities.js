@@ -24,7 +24,8 @@ async function addActivityToRoutine({
     console.error(error);
   }
 
-}
+  // possibly use JOIN psql? this method works for now
+};
 
 async function getRoutineActivityById(id) {}
 

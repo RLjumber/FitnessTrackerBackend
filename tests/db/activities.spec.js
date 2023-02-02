@@ -28,7 +28,7 @@ describe("DB Activities", () => {
   });
 
   describe("getAllActivities", () => {
-    xit("Selects and returns an array of all activities", async () => {
+    it("Selects and returns an array of all activities", async () => {
       await createFakeActivity("Sit ups", "Do 100 reps");
       const activities = await getAllActivities();
       const { rows: activitiesFromDatabase } = await client.query(`
