@@ -12,7 +12,7 @@ async function createActivity({ name, description }) {
       returning *;
     `, [name, description]);
 
-    // console.log(activity);
+    console.log(activity);
     console.log("Activity created");
 
     return activity;
@@ -85,23 +85,27 @@ async function getActivityByName(name) {
 
 async function attachActivitiesToRoutines(routines) {
   // select and return an array of all activities
+  try {
+  const createRoutineActivitiesPromises = activities.map(
+    activity => createActivity(activities.id, routines.id)
+  );
+
+  await Promise.all(createRoutineActivitiesPromises);
+
+  return await getActivityById(id);
+} catch (error) {
+  console.log("failed to attach activities")
+  throw error;
+}
 }
 
-async function updateActivity({ id, ...fields }) {
+
+async function updateActivity({ id, fields = {} }) {
   // don't try to update the id
   // do update the name and description
   // return the updated activity
-  const setString = Object.keys(fields).map(
-    (key, index) => `"${key}"=$${index + 1}`
-  ).join(', ');
-
-  try {
-    if (setString.length>0) {
-      const
-    }
-  }
-
 }
+
 
 module.exports = {
   getAllActivities,
