@@ -75,7 +75,7 @@ describe("DB Activities", () => {
       expect(updatedActivity.description).toEqual(fakeActivity.description);
     });
 
-    xit("Updates description without affecting the ID. Returns the updated Activity.", async () => {
+    it("Updates description without affecting the ID. Returns the updated Activity.", async () => {
       const fakeActivity = await createFakeActivity("Soccer", "After school");
       const description = "Football is life!";
       const updatedActivity = await updateActivity({
