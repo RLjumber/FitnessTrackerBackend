@@ -49,7 +49,7 @@ async function getActivityById(id) {
   console.log("getting activities by id...")
   try {
     const {rows: [activity]} = await client.query(`
-    SELECT id, name, description
+    SELECT *
     FROM activities
     WHERE id=$1;
     `, [id]);
@@ -59,7 +59,7 @@ async function getActivityById(id) {
     return activity;
   
   } catch (error) {
-    console.log("Cannot get activies by id.")
+    console.log("Cannot get activity by id.")
     throw error;
   }
 }
@@ -68,7 +68,7 @@ async function getActivityByName(name) {
   console.log("getting activities by name...")
   try {
     const { rows: [activity] } = await client.query(`
-    Select id, name, description
+    Select *
     FROM activities
     WHERE name=$1;
     `, [name]);
@@ -78,35 +78,57 @@ async function getActivityByName(name) {
     return activity;
 
   } catch (error) {
-    console.log("Cannot get activities by name.");
+    console.log("Cannot get activity by name.");
     throw error
   }
 }
 
-async function attachActivitiesToRoutines(routines) {
-  // select and return an array of all activities
+// async function attachActivitiesToRoutines(routines) {
+//   // select and return an array of all activities
+// try {
+// console.log("attatching activities to routines...")
+
+// const { rows } = await client.query(`
+// INSERT INTO routines
+// SELECT * FROM activities
+// WHERE routines = $1;`
+// , [routines]);
+
+// console.log(rows)
+// return rows
+
+// } catch (error) {
+//   console.log("failed to attatch activities to routines!");
+//   throw error;
+// }
+// }
+
+
+
+async function updateActivity({ id, ...fields}) {
+
+  const setString = Object.keys(fields).map(
+    (key, index) => `"${key}"=$${index + 1}`
+  ).join(', ');
+
   try {
-  const createRoutineActivitiesPromises = activities.map(
-    activity => createActivity(activities.id, routines.id)
-  );
+    if (setString.length > 0) {
+      const { rows : [ activity ]} = await client.query(`
+        UPDATE activities
+        SET ${setString}
+        WHERE id=${id}
+        RETURNING *;
+      `, Object.values(fields));
+    
+      return activity
+    }
 
-  await Promise.all(createRoutineActivitiesPromises);
-
-  return await getActivityById(id);
 } catch (error) {
-  console.log("failed to attach activities")
+  console.log("failed to update activity!");
   throw error;
 }
+
 }
-
-
-async function updateActivity({ id, fields = {} }) {
-  // don't try to update the id
-  // do update the name and description
-  // return the updated activity
-}
-
-
 module.exports = {
   getAllActivities,
   getActivityById,
