@@ -25,11 +25,45 @@ async function addActivityToRoutine({
   }
 
   // possibly use JOIN psql? this method works for now
-};
+}
 
-async function getRoutineActivityById(id) {}
+async function getRoutineActivityById(id) {
+  // console.log("Getting routine activity by id...");
 
-async function getRoutineActivitiesByRoutine({ id }) {}
+  try {
+    const {rows: [routineactivity]} = await client.query(`
+    SELECT * FROM routine_activities
+    WHERE id = $1;
+    `, [id])
+
+    // console.log(routineactivity);
+    return routineactivity;
+
+  } catch(error) {
+    console.log(error);
+    console.error(error);
+  }
+}
+
+async function getRoutineActivitiesByRoutine({ id }) {
+  // console.log("Getting routine activity by routine...");
+  // select and return an array of all routine_activity records
+  // unlike the above getRoutineActivityById(id), this function returns the routine activities based on the routineId not the main SERIAL primary key id 
+
+  try {
+    const { rows } = await client.query(`
+    SELECT * FROM routine_activities
+    WHERE "routineId" = $1;
+    `, [id])
+
+    // console.log("Activity by routine gotten: ");
+    return rows;
+
+  } catch(error) {
+    console.log(error);
+    console.error(error);
+  }
+}
 
 async function updateRoutineActivity({ id, ...fields }) {}
 
