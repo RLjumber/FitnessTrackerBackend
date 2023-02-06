@@ -133,7 +133,7 @@ module.exports = {
   getAllActivities,
   getActivityById,
   getActivityByName,
-  attachActivitiesToRoutines,
+  // attachActivitiesToRoutines,
   createActivity,
   updateActivity,
 };
