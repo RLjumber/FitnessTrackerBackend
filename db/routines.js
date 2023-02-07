@@ -53,7 +53,7 @@ async function getAllRoutines() {
 
   try {
     const {rows} = await client.query(`
-      SELECT * FROM routines;
+      SELECT * FROM routines
     `)
 
 
@@ -68,7 +68,8 @@ async function getAllRoutines() {
   }
 }
 
-async function getAllPublicRoutines() {}
+async function getAllPublicRoutines() {
+}
 
 async function getAllRoutinesByUser({ username }) {}
 
