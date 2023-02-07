@@ -65,11 +65,70 @@ async function getRoutineActivitiesByRoutine({ id }) {
   }
 }
 
-async function updateRoutineActivity({ id, ...fields }) {}
+async function updateRoutineActivity({ id, ...fields }) {
+  const setString = Object.keys(fields).map(
+    (key, index) => `"${key}"=$${index + 1}`
+  ).join(', ');
 
-async function destroyRoutineActivity(id) {}
+  console.log("Updating routine activity...");
 
-async function canEditRoutineActivity(routineActivityId, userId) {}
+  try {
+    if (setString.length > 0) {
+      const { rows : [ routine_activity ]} = await client.query(`
+        UPDATE routine_activities
+        SET ${setString}
+        WHERE id=${id}
+        RETURNING *;
+      `, Object.values(fields));
+
+      console.log(routine_activity)
+      return routine_activity;
+    }
+
+} catch (error) {
+  console.log("failed to update routine activity!");
+  throw error;
+}
+}
+
+async function destroyRoutineActivity(id) {
+  console.log("Destroying routine_activity...");
+
+  try {
+   const {rows : [routine_activity]} = await client.query(`
+    DELETE FROM routine_activities
+    WHERE id = $1
+    RETURNING *;
+    `, [id]);
+
+    return routine_activity;
+
+  } catch (error) {
+    console.error("Failed to destroy routine_activity!")
+  }
+}
+
+async function canEditRoutineActivity(routineActivityId, userId) {
+  console.log("Checking if can edit routine_activity...");
+
+  const routineActivity = await getRoutineActivityById(routineActivityId)
+  console.log(routineActivity)
+
+  // try {
+  //   const creatorId = await client.query(`
+  //   SELECT "creatorId" FROM routines
+  //   WHERE "routineId" = $1
+  //   `, [routineActivityId]);
+
+  //   if (creatorId === userId) {
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // } catch (error) {
+  //   console.error("Cannot check if able to edit!")
+  // }
+}
 
 module.exports = {
   getRoutineActivityById,
