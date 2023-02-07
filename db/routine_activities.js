@@ -108,26 +108,21 @@ async function destroyRoutineActivity(id) {
   }
 }
 
-async function canEditRoutineActivity(routineActivityId, userId) {
-  console.log("Checking if can edit routine_activity...");
+async function canEditRoutineActivity(routineActivityId, userId) { 
 
-  const routineActivity = await getRoutineActivityById(routineActivityId)
-  console.log(routineActivity)
 
-  // try {
-  //   const creatorId = await client.query(`
-  //   SELECT "creatorId" FROM routines
-  //   WHERE "routineId" = $1
-  //   `, [routineActivityId]);
+  const routineActivity = await getRoutineActivityById(routineActivityId);
 
-  //   if (creatorId === userId) {
-  //     return true;
-  //   } else {
-  //     return false;
-  //   }
-  // } catch (error) {
-  //   console.error("Cannot check if able to edit!")
-  // }
+
+  console.log(routineActivity.routineId);
+  console.log(userId)
+
+  if (routineActivity.routineId === userId) {
+    return true;
+  } else {
+    return false;
+  }
+
 }
 
 module.exports = {
