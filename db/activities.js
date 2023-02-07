@@ -83,25 +83,25 @@ async function getActivityByName(name) {
   }
 }
 
-// async function attachActivitiesToRoutines(routines) {
-//   // select and return an array of all activities
-// try {
-// console.log("attatching activities to routines...")
+async function attachActivitiesToRoutines(routines) {
+  // select and return an array of all activities
+try {
+console.log("attatching activities to routines...")
 
-// const { rows } = await client.query(`
-// INSERT INTO routines
-// SELECT * FROM activities
-// WHERE routines = $1;`
-// , [routines]);
+const { activity } = await client.query(`
+SELECT * FROM activities
+WHERE routines = $1;
+`
+, [routines]);
 
-// console.log(rows)
-// return rows
+console.log(activity)
+return activity;
 
-// } catch (error) {
-//   console.log("failed to attatch activities to routines!");
-//   throw error;
-// }
-// }
+} catch (error) {
+  console.log("failed to attatch activities to routines!");
+  throw error;
+}
+}
 
 
 
@@ -133,7 +133,7 @@ module.exports = {
   getAllActivities,
   getActivityById,
   getActivityByName,
-  // attachActivitiesToRoutines,
+  attachActivitiesToRoutines,
   createActivity,
   updateActivity,
 };
