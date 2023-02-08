@@ -22,7 +22,7 @@ async function createRoutine({ creatorId, isPublic, name, goal }) {
     console.error("Cannot create routine.");
     throw error;
   }
-};
+}
 
 async function getRoutineById(id) {
   try {
@@ -131,7 +131,26 @@ async function getPublicRoutinesByActivity({ id }) {}
 
 async function updateRoutine({ id, ...fields }) {}
 
-async function destroyRoutine(id) {}
+async function destroyRoutine(id) {
+  console.log("Destroying routine...");
+
+  try {
+    await client.query(`
+    DELETE FROM routine_activities
+    WHERE "routineId"=$1;
+    `, [id]);
+
+  await client.query(`
+    DELETE FROM routines
+    WHERE id = $1
+    `, [id]);
+
+
+
+  } catch (error) {
+    console.error("Failed to destroy routine_activity!")
+  }
+}
 
 module.exports = {
   getRoutineById,
