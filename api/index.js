@@ -1,8 +1,16 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
+const cors = require("cors");
+router.use(cors());
 
 // GET /api/health
 router.get('/health', async (req, res, next) => {
+
+    res.status(200).send({
+        message: "Okkkk lets go"
+    })
+
+    next();
 });
 
 // ROUTER: /api/users
