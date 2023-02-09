@@ -127,9 +127,46 @@ WHERE "isPublic"='true' AND "username"=$1;
   }
 }
 
-async function getPublicRoutinesByActivity({ id }) {}
+async function getPublicRoutinesByActivity({ id }) {
 
-async function updateRoutine({ id, ...fields }) {}
+  try {
+    const { rows: routines } = await client.query(`
+      SELECT routines.*, users.username AS "creatorName", routine_activities."activityId"
+      FROM routines
+      JOIN users ON routines."creatorId" = users.id
+      JOIN routine_activities ON routines.id = routine_activities."routineId"
+      WHERE "isPublic"='true' AND "activityId"=$1;
+    `, [id]);
+
+    return attachActivitiesToRoutines(routines);
+  } catch (error) {
+    console.error;
+    throw error;
+  }
+}
+
+async function updateRoutine({ id, ...fields }) {
+  const setString = Object.keys(fields).map(
+    (key, index) => `"${key}"=$${index + 1}`
+  ).join(', ');
+
+  try {
+    if (setString.length > 0) {
+      const { rows : [ routine ]} = await client.query(`
+        UPDATE routines
+        SET ${setString}
+        WHERE id=${id}
+        RETURNING *;
+      `, Object.values(fields));
+
+      return routine;
+    }
+
+} catch (error) {
+  console.log("failed to update routines");
+  throw error;
+}
+}
 
 async function destroyRoutine(id) {
   console.log("Destroying routine...");
