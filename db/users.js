@@ -31,7 +31,7 @@ async function createUser({ username, password }) {
     throw error;
   }
   
-};
+}
 
 async function getUser({ username, password }) {
 

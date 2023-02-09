@@ -58,7 +58,7 @@ async function getRoutinesWithoutActivities() {
     throw error;
   }
 
-};
+}
 
 
 async function getAllRoutines() {
