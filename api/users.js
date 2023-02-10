@@ -4,7 +4,7 @@ const router = express.Router();
 const { createUser, getUserByUsername, getUser } = require("../db/users");
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET = 'neverTell' } = process.env;
-const {requireUser} = require("./utility");
+const { requireUser } = require("./utility");
 
 // POST /api/users/register
 router.post('/register', async (req, res, next) => {
@@ -106,15 +106,17 @@ router.post('/login', async (req, res, next) => {
 })
 
 // GET /api/users/me
+
 router.get('/me', requireUser, async (req, res, next) => {
+
     try {
-        console.log("bubble", req.user)
-        res.send(req.user)
+        res.status(200).send(req.user)
         
     } catch (error) {
         next(error)
     }
 })
+
 // GET /api/users/:username/routines
 
 module.exports = router;
