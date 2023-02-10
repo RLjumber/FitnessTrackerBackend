@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-// const { requireUser } = require("./utility");
+const { requireUser } = require("./utility");
 const {
   updateRoutineActivity,
   getRoutineActivityById,
@@ -11,7 +11,7 @@ const {
 
 // PATCH /api/routine_activities/:routineActivityId
 
-router.patch("/:routineActivityId", async (req, res, next) => {
+router.patch("/:routineActivityId", requireUser, async (req, res, next) => {
     const { duration, count } = req.body;
     const id = req.params.routineActivityId;
     console.log("123", req.params);
@@ -21,6 +21,7 @@ router.patch("/:routineActivityId", async (req, res, next) => {
       const routineActivity = await getRoutineActivityById(id);
       const routineById = await getRoutineById(routineActivity.routineId);
       console.log("routine activity to be patched: ", routineActivity);
+    //   console.log("GO BIRDS", req.user)
       console.log("routines: ", routineById);
   
       if (!routineActivity) {
@@ -31,7 +32,7 @@ router.patch("/:routineActivityId", async (req, res, next) => {
         });
       } else if (req.user && routineById.creatorId != req.user.id) {
           res.status(403).send({
-            message: `Nice try ${req.user.username} !`,
+            message: `User ${req.user.username} is not allowed to update In the evening`,
             error: "UserNotCreatorError",
             name: "UserNotCreatorError"
           })
@@ -52,7 +53,7 @@ router.patch("/:routineActivityId", async (req, res, next) => {
 
 // DELETE /api/routine_activities/:routineActivityId
 
-router.delete("/:routineActivityId", async (req, res, next) => {
+router.delete("/:routineActivityId", requireUser, async (req, res, next) => {
     const id = req.params.routineActivityId;
     try {
       const routineActivity = await getRoutineActivityById(id);
@@ -68,7 +69,7 @@ router.delete("/:routineActivityId", async (req, res, next) => {
         });
       } else if (req.user && routineById.creatorId != req.user.id) {
         res.status(403).send({
-          message: `Nice try ${req.user.username} !`,
+          message: `User ${req.user.username} is not allowed to delete In the afternoon`,
           error: "UserNotCreatorError",
           name: "UserNotCreatorError"
         })

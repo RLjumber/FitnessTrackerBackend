@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { requireUser } = ('./utility')
+const { requireUser } = require("./utility");
 const {
     getAllActivities,
     getActivityById,
@@ -28,25 +28,25 @@ router.get("/", async (req , res, next) => {
     }
 })
 
-// router.post("/", requireUser, async (req , res, next) => {
-//     try{
-//         const { name, description } = req.body;
-//         const _activity = await getActivityByName(name)
-//         if (_activity) {
-//             next({
-//                 name: "ActivityExistsError",
-//                 message: `An activity with the name ${name} already exists`,
-//                 error: "ActivityExistsError"
-//             });
-//         } else {
-//             const newActivityData = {description, name};
-//             const newActivity = await createActivity(newActivityData)
-//             res.send(newActivity)
-//         }
-//     } catch (error){
-//         next({error});
-//     }
-// })
+router.post("/", requireUser, async (req , res, next) => {
+    try{
+        const { name, description } = req.body;
+        const _activity = await getActivityByName(name)
+        if (_activity) {
+            next({
+                name: "ActivityExistsError",
+                message: `An activity with name ${name} already exists`,
+                error: "ActivityExistsError"
+            });
+        } else {
+            const newActivityData = {description, name};
+            const newActivity = await createActivity(newActivityData)
+            res.send(newActivity)
+        }
+    } catch (error){
+        next({error});
+    }
+})
 
 router.get("/:activityId/routines", async(req, res, next) => {
     const {activityId} = req.params;
