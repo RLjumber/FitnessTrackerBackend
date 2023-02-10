@@ -70,6 +70,33 @@ router.get("/:activityId/routines", async(req, res, next) => {
 });
 
 // router.patch("/:activityId", requireUser, async(req, res, next) => {
-
+router.patch("/:activityId", requireUser, async(req, res, next) => {
+    try {
+        const {activityId} = req.params;
+        const _activity = await getActivityById(activityId);
+        if(!_activity) {
+            next({
+                error: "Error",
+                message: `Activity ${activityId} not found`,
+                name: 'NotFound'
+            });
+        } else {
+            const {name, description} = req.body;
+            const updatedActivity = await updateActivity({id: activityId, name, description})
+            if(updatedActivity) {
+            res.send(updatedActivity);
+            } else {
+            next({
+                error: "errorerr",
+                name: "Anything",
+                message: `Activity ${activityId}`
+            })
+            }
+        }
+        } catch (error) {
+        next(error);
+        }
+    });
+    
 
 module.exports = router
