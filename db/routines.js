@@ -45,7 +45,7 @@ async function getRoutinesWithoutActivities() {
   // console.log("Selecting all routines without activities")
 
   try {
-    const { rows: [routinesWithoutActivities]} = await client.query(`
+    const { rows: routinesWithoutActivities} = await client.query(`
       SELECT * FROM routines;
     `)
 
