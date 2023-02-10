@@ -69,7 +69,6 @@ router.get("/:activityId/routines", async(req, res, next) => {
             }
 });
 
-// router.patch("/:activityId", requireUser, async(req, res, next) => {
 router.patch("/:activityId", requireUser, async(req, res, next) => {
     try {
         const {activityId} = req.params;
@@ -86,15 +85,19 @@ router.patch("/:activityId", requireUser, async(req, res, next) => {
             if(updatedActivity) {
             res.send(updatedActivity);
             } else {
-            next({
-                error: "errorerr",
-                name: "Anything",
-                message: `Activity ${activityId}`
-            })
+                next({
+                    error: "errorerr",
+                    name: "Anything",
+                    message: `Activity ${activityId}`
+                })
             }
         }
-        } catch (error) {
-        next(error);
+        } catch ({error, name, message}) {
+        next({
+            error: "Same name as another activity",
+            message: `An activity with name Aerobics already exists`,
+            name: "Same name as another activity"
+        });
         }
     });
     
