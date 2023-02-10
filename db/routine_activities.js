@@ -120,7 +120,7 @@ async function canEditRoutineActivity(routineActivityId, userId) {
   if (routineActivity.routineId === userId) {
     return true;
   } else {
-    return false;
+    return false
   }
 
 }

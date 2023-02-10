@@ -109,7 +109,7 @@ describe("/api/users", () => {
       const response = await request(app)
         .post("/api/users/register")
         .send(secondUserData);
-
+        console.log("response from tests", response.body);
       expectToBeError(response.body);
 
       expectToHaveErrorMessage(

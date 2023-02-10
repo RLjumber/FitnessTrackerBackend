@@ -3,48 +3,49 @@ const express = require("express");
 const router = express.Router();
 const { createUser, getUserByUsername } = require("../db/users");
 const jwt = require('jsonwebtoken');
+const { JWT_SECRET = 'neverTell' } = process.env;
 
 // POST /api/users/register
 router.post('/register', async (req, res, next) => {
-    console.log("req.body: ", req.body)
-    const { username, password } = req.body;
 
     try {
-        const _user = await getUserByUsername(username);
-
-        if (_user) {
-            next({
-                name: "UserExistError",
-                message: `User ${username} is already taken.`,
-                error: "Error!",
-            }) 
-        if (password.length < 8) {
-            next({
-                name: "PasswordLengthError",
-                message: `Password too short!!.`,
-                error: "Error!",
-            })
-            const user = await createUser({ username, password })
-
-            const token = jwt.sign({
-                id: user.id,
-                username
-            }, process.env.JWT_SECRET)
-
-            res.send({
-                user: {
-                    id: user.id,
-                    username: username
-                },
-                message: "You're signed up !",
-                token: token
-            })
-            }
+      const {username, password} = req.body;
+      console.log("From POST register", username);
+      const queriedUser = await getUserByUsername(username);
+      if (queriedUser) {
+        res.status(401);
+        next({
+          error: "A user by that username already exists",
+          name: 'UserExistsError',
+          message: `User ${username} is already taken.`
+        });
+      } else if (password.length < 8) {
+        res.status(401);
+        next({
+          error: "Password too short!!",
+          name: 'PasswordLengthError',
+          message: 'Password Too Short!'
+        });
+      } else {
+        const user = await createUser({
+          username,
+          password
+        });
+        if (!user) {
+          next({
+            error: "There was a problem registering you. Please try again",
+            name: 'UserCreationError',
+            message: 'There was a problem registering you. Please try again.',
+          });
+        } else {
+          const token = jwt.sign({id: user.id, username: user.username}, JWT_SECRET, { expiresIn: '1w' });
+          res.send({ user, message: "you're signed up!", token });
         }
+      }
     } catch (error) {
       next(error)
     }
-})
+  })
 
 
 // POST /api/users/login
