@@ -1,7 +1,7 @@
 /* eslint-disable no-useless-catch */
 const express = require("express");
 const router = express.Router();
-const { createUser, getUserByUsername } = require("../db/users");
+const { createUser, getUserByUsername, getUser } = require("../db/users");
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET = 'neverTell' } = process.env;
 
@@ -9,9 +9,11 @@ const { JWT_SECRET = 'neverTell' } = process.env;
 router.post('/register', async (req, res, next) => {
 
     try {
+
       const {username, password} = req.body;
-      console.log("From POST register", username);
+      // console.log("From POST register", username);
       const queriedUser = await getUserByUsername(username);
+
       if (queriedUser) {
         res.status(401);
         next({
@@ -49,6 +51,58 @@ router.post('/register', async (req, res, next) => {
 
 
 // POST /api/users/login
+router.post('/login', async (req, res, next) => {
+  
+  const {username, password} = req.body;
+
+  if (!username || !password) {
+    next({
+      name: "MissingCredentialsError",
+      message: "Please supply both a username and password"
+    })
+  }
+
+  try {
+    console.log("Try me", username, "password", password)
+    const user = await getUserByUsername(username);
+    // console.log("WOOT", user)
+
+    if (user && user.password === password) {
+      // console.log("search", user)
+      const token = jwt.sign(
+            {
+            id: user.id, 
+            username
+            },
+
+            JWT_SECRET, 
+
+            { 
+            expiresIn: '1w' 
+            }
+          );
+
+          // const verifiedToken = jwt.verify(token)
+
+          res.send({ 
+             message: "you're logged in!", 
+             token, 
+             user
+            });
+          // return verifiedToken;
+
+    } else {
+      next({
+        error: "Cannot Login",
+        message: 'There was a problem signing you in. Please try again.',
+        name: 'UserLoginError'
+      });
+    }
+
+  } catch (error) {
+    next(error)
+  }
+})
 
 // GET /api/users/me
 
