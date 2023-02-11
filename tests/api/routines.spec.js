@@ -30,7 +30,7 @@ const { getRoutineById } = require("../../db");
 
 describe("/api/routines", () => {
   describe("GET /api/routines", () => {
-    xit("Returns a list of public routines, includes the activities with them", async () => {
+    it("Returns a list of public routines, includes the activities with them", async () => {
       const { fakeUser } = await createFakeUserWithToken("Jan");
       const fakeRoutine = await createFakePublicRoutine(
         fakeUser.id,
@@ -65,7 +65,7 @@ describe("/api/routines", () => {
   });
 
   describe("POST /api/routines (*)", () => {
-    xit("Creates a new routine, with the creatorId matching the logged in user", async () => {
+    it("Creates a new routine, with the creatorId matching the logged in user", async () => {
       const { fakeUser, token } = await createFakeUserWithToken("Marsha");
 
       const routineData = {
@@ -85,7 +85,7 @@ describe("/api/routines", () => {
       expect(response.body.creatorId).toEqual(fakeUser.id);
     });
 
-    xit("Requires logged in user", async () => {
+    it("Requires logged in user", async () => {
       const routineData = {
         isPublic: true,
         name: "Weekly",
