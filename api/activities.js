@@ -28,28 +28,28 @@ router.get("/", async (req , res, next) => {
     }
 })
 
-router.post("/", requireUser, async (req , res, next) => {
-    try{
-        const { name, description } = req.body;
-        const activity = await getActivityByName(name)
-        if (activity) {
-            next({
-                name: "ActivityExistsError",
-                message: "An activity with the name ${name} already exists",
-                error: "ActivityExistsError"
-            });
-        } else {
-            const activityData = {description, name};
-            const newActivity = await createActivity(activityData)
-            res.send(newActivity)
-        }
-    } catch (error){
-        next({error});
-    }
-})
+// router.post("/", requireUser, async (req , res, next) => {
+//     try{
+//         const { name, description } = req.body;
+//         const _activity = await getActivityByName(name)
+//         if (_activity) {
+//             next({
+//                 name: "ActivityExistsError",
+//                 message: `An activity with the name ${name} already exists`,
+//                 error: "ActivityExistsError"
+//             });
+//         } else {
+//             const newActivityData = {description, name};
+//             const newActivity = await createActivity(newActivityData)
+//             res.send(newActivity)
+//         }
+//     } catch (error){
+//         next({error});
+//     }
+// })
 
 router.get("/:activityId/routines", async(req, res, next) => {
-    const { activityId } = req.params;
+    const {activityId} = req.params;
     try {
         const activity = await getActivityById(activityId)
         if (!activity) {

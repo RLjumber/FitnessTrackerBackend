@@ -1,7 +1,7 @@
 /* eslint-disable no-useless-catch */
 const express = require("express");
 const router = express.Router();
-const { createUser, getUserByUsername, getUser } = require("../db/users");
+const { createUser, getUserByUsername, getUser, getAllRoutinesByUser, getPublicRoutinesByUser } = require("../db/");
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET = 'neverTell' } = process.env;
 const {requireUser} = require("./utility");
@@ -111,9 +111,27 @@ router.get('/me', requireUser, async (req, res, next) => {
         res.send(req.user)
         
     } catch (error) {
-        next(error)
+        next({error: "Error loading profile",
+                message: "You must be logged in to perform this action",
+                name: "ErrorProfile"})
     }
 })
 // GET /api/users/:username/routines
+
+router.get('/:username/routines', async (req, res, next) => {
+  try {
+    const {username} = req.params;
+    const user = await getUserByUsername(username);
+if (req.user && user.id === req.user.id) {
+      const routines = await getAllRoutinesByUser({username});
+      res.send(routines);
+    } else {
+      const routines = await getPublicRoutinesByUser({username});
+      res.send(routines);
+    }
+  } catch (error) {
+    next(error)
+  }
+})
 
 module.exports = router;
