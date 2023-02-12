@@ -108,7 +108,6 @@ router.post('/login', async (req, res, next) => {
 // GET /api/users/me
 router.get('/me', requireUser, async (req, res, next) => {
     try {
-        console.log("bubble", req.user)
         res.send(req.user)
         
     } catch (error) {
