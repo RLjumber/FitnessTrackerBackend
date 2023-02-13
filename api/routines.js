@@ -17,37 +17,35 @@ router.get("/", async (req, res, next) => {
 
 // POST /api/routines
 router.post("/", requireUser, async (req, res, next) => {
+    const { id } = req.user;
+    const { isPublic, name, goal } = req.body;
+  
     try {
-      const { isPublic, name, goal } = req.body;
-      const creatorId = req.user.id;
-      const response = await createRoutine({ creatorId, isPublic, name, goal });
-      res.send(response);
+      const creatorId = id;
+      const newRoutine = await createRoutine({ creatorId, isPublic, name, goal });
+      res.send(newRoutine);
     } catch (error) {
       next(error);
     }
   });
-
 // PATCH /api/routines/:routineId
 
 // DELETE /api/routines/:routineId
 router.delete("/:routineId", requireUser, async (req, res, next) => {
-    const { routineId } = req.params;
-  
     try {
-      const response = await getRoutineById(routineId);
-      const { name } = response;
-      const routineCreatorId = response.creatorId;
+      const { routineId } = req.params;
+      const currentUser = req.user;
   
-      if (routineCreatorId === req.user.id) {
-        await destroyRoutine(routineId);
-  
-        res.send(response);
-      } else {
+      const routine = await getRoutineById(routineId);
+      if (routine && routine.creatorId === req.user.id) {
+        const routineDelete = await destroyRoutine(routineId);
+        res.send({ routineDelete, ...routine });
+      } else if (routine.createdBy !== currentUser.id) {
+        res.status(403);
         next({
-          error: "Error!",
-          name: "NotCreatorOfRoutine",
-          message: `User ${req.user.username} is not allowed to delete ${name}`,
-          status: 403,
+          error: "Error",
+          message: `User ${req.user.username} is not allowed to delete On even days`,
+          name: "Error",
         });
       }
     } catch (error) {
@@ -57,21 +55,26 @@ router.delete("/:routineId", requireUser, async (req, res, next) => {
 
 // POST /api/routines/:routineId/activities
 router.post("/:routineId/activities", async (req, res, next) => {
-    const { routineId, activityId, count, duration } = req.body;
     try {
-      const response = await addActivityToRoutine({
+      const { routineId } = req.params;
+      const { activityId, count, duration } = req.body;
+  
+      const routineActivityAttach = await addActivityToRoutine({
         routineId,
         activityId,
         count,
         duration,
       });
-      response
-        ? res.send(response)
-        : next({
-            error: "Error!",
-            message: `Activity ID ${activityId} already exists in Routine ID ${routineId}`,
-            name: "CanNotDuplicateActivity/RoutineId",
-          });
+  
+      if (routineActivityAttach) {
+        res.send(routineActivityAttach);
+      } else {
+        next({
+          error: "Error",
+          message: `Activity ID ${activityId} already exists in Routine ID ${routineId}`,
+          name: "Error",
+        });
+      }
     } catch (error) {
       next(error);
     }
