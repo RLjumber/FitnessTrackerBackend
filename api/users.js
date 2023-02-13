@@ -5,7 +5,7 @@ const { createUser, getUserByUsername, getUser, getAllRoutinesByUser, getPublicR
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET = 'neverTell' } = process.env;
 const {requireUser} = require("./utility");
-const {getAllRoutinesByUser, getPublicRoutinesByUser} = require("../db/routines")
+// const {getAllRoutinesByUser, getPublicRoutinesByUser} = require("../db/routines")
 
 
 // POST /api/users/register
