@@ -1,5 +1,6 @@
-function requireUser(req, res, next){
-    if(!req.user){
+function requireUser(req, res, next) {
+    if (!req.user) {
+        console.log("requireUser was hit", req.user)
         res.send(401)
         next({
             name: "missing user error",
@@ -11,3 +12,4 @@ function requireUser(req, res, next){
 }
 
 module.exports = { requireUser };
+

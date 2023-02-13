@@ -7,6 +7,7 @@ const { JWT_SECRET = 'neverTell' } = process.env;
 const {requireUser} = require("./utility");
 const {getAllRoutinesByUser, getPublicRoutinesByUser} = require("../db/routines")
 
+
 // POST /api/users/register
 router.post('/register', async (req, res, next) => {
 
